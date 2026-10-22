@@ -66,3 +66,48 @@ def test_matching_returns_zero_when_no_required_skills_match():
 
     assert result.required_skill_match_percentage == 0.0
     assert result.missing_required_skills == ["Python", "Docker"]
+
+
+def test_matching_detects_insufficient_experience():
+    candidate = Candidate(
+        name="Alex",
+        professional_title="Python Developer",
+        skills=["Python"],
+        years_experience=2,
+    )
+
+    job = Job(
+        title="Senior Python Developer",
+        company="Example Tech",
+        required_skills=["Python"],
+        min_years_experience=3,
+        description="Develop backend services.",
+    )
+
+    result = match_candidate_to_job(candidate, job)
+
+    assert result.candidate_years_experience == 2
+    assert result.required_years_experience == 3
+    assert result.meets_experience_requirement is False
+
+
+def test_matching_accepts_exact_experience_requirement():
+    candidate = Candidate(
+        name="Alex",
+        professional_title="Python Developer",
+        skills=["Python"],
+        years_experience=3,
+    )
+
+    job = Job(
+        title="Python Developer",
+        company="Example Tech",
+        required_skills=["Python"],
+        min_years_experience=3,
+        description="Develop backend services.",
+    )
+
+    result = match_candidate_to_job(candidate, job)
+
+    assert result.meets_experience_requirement is True
+	

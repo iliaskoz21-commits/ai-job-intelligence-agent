@@ -1,4 +1,5 @@
-﻿from app.models.candidate import Candidate
+﻿
+from app.models.candidate import Candidate
 from app.models.job import Job
 from app.models.match_result import MatchResult
 
@@ -12,7 +13,7 @@ def match_candidate_to_job(
     candidate: Candidate,
     job: Job,
 ) -> MatchResult:
-    """Compare candidate skills against a job's skill requirements."""
+    """Compare candidate skills and experience with job requirements."""
 
     candidate_skills = {
         normalize_skill(skill): skill
@@ -41,6 +42,10 @@ def match_candidate_to_job(
         len(matched_required) / len(job.required_skills) * 100
     )
 
+    meets_experience = (
+        candidate.years_experience >= job.min_years_experience
+    )
+
     return MatchResult(
         candidate_name=candidate.name,
         job_title=job.title,
@@ -48,4 +53,7 @@ def match_candidate_to_job(
         missing_required_skills=missing_required,
         matched_preferred_skills=matched_preferred,
         required_skill_match_percentage=round(percentage, 2),
+        candidate_years_experience=candidate.years_experience,
+        required_years_experience=job.min_years_experience,
+        meets_experience_requirement=meets_experience,
     )
