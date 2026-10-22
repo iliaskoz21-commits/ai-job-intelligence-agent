@@ -110,4 +110,27 @@ def test_matching_accepts_exact_experience_requirement():
     result = match_candidate_to_job(candidate, job)
 
     assert result.meets_experience_requirement is True
+
+def test_matching_summary_explains_missing_skills_and_experience():
+    candidate = Candidate(
+        name="Alex",
+        professional_title="Python Developer",
+        skills=["Python", "FastAPI"],
+        years_experience=2,
+    )
+
+    job = Job(
+        title="Backend Developer",
+        company="Example Tech",
+        required_skills=["Python", "FastAPI", "Docker"],
+        min_years_experience=3,
+        description="Build backend services.",
+    )
+
+    result = match_candidate_to_job(candidate, job)
+
+    assert "66.67%" in result.match_summary
+    assert "Docker" in result.match_summary
+    assert "does not meet the experience requirement" in result.match_summary
+
 	

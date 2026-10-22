@@ -13,3 +13,5 @@ class MatchResult(BaseModel):
     candidate_years_experience: float = Field(ge=0)
     required_years_experience: float = Field(ge=0)
     meets_experience_requirement: bool
+
+    match_summary: str
